@@ -37,6 +37,19 @@ Run the Rust domain-core tests separately with `cd rust-core && cargo test`.
 - Review [community guidelines](docs/COMMUNITY-GUIDELINES.md), [privacy draft](docs/PRIVACY.md), and [terms draft](docs/TERMS.md) with qualified local counsel. They are planning drafts, not publication-ready legal notices.
 - The [launch announcement](docs/LAUNCH-ANNOUNCEMENT.md) is a template; only claim functionality that is live.
 
+## Fly.io deployment setup
+
+`fly.toml` is configured to run the existing FastAPI app and Docker image in Johannesburg (`jnb`), enforce HTTPS, check `/health`, and mount a persistent SQLite volume at `/data`. Change `app` in `fly.toml` if that Fly app name is already taken. From an installed and authenticated `flyctl` CLI:
+
+```sh
+fly launch --no-deploy
+fly volumes create crews_gigs_data --region jnb --size 1
+fly secrets set PILOT_INVITE_CODE='choose-a-long-random-code' MODERATOR_EMAILS='moderator@example.com'
+fly deploy
+```
+
+Create the moderator account using the invite code, then verify `https://<your-fly-app>.fly.dev/health` and `/app`. Keep a single machine while using SQLite; maintain and test volume backups. The current GitHub Pages project site is static and cannot run the API. After the Fly deployment is live, point the marketing-site join, login, and gig-board links to the Fly app URL so signup and API requests use the same HTTPS origin. The current `/app` link on GitHub Pages cannot work until that destination is updated.
+
 ## Production deployment requirements
 
 GitHub Pages can host only the static marketing page; it cannot run the API. Deploy this FastAPI application on an HTTPS-capable app host with a persistent volume for SQLite (or move to managed PostgreSQL), set `CREWS_GIGS_DB` to that volume, and set `COOKIE_SECURE=1`. Use a trusted reverse proxy, external/persistent rate limiting, monitored backups and restore tests, a support inbox, and dependency updates. Do not expose the repository or database through static file serving. Do not use the local SQLite configuration as a multi-instance production database.
