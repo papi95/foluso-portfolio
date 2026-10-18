@@ -1,4 +1,4 @@
-# Foluso — Creative Developer Portfolio
+# Folu Productions — Creative Portfolio
 
 A responsive, interactive portfolio for a multidisciplinary full-stack developer, AI builder, motion designer, and visual designer. Built as a fast static site with vanilla HTML, CSS, and JavaScript, plus a dependency-free Rust domain core.
 
