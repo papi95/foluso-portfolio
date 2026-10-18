@@ -23,3 +23,7 @@ A production platform requires a secure backend and database, identity and profi
 ## Performance and accessibility
 
 The static prototype has no build step, external font requests, or large image assets. Controls use native HTML elements; the page includes a skip link, labels, responsive navigation, and reduced-motion rules. Keep new interactions keyboard-operable and provide useful empty/error states.
+
+## Visual palette
+
+The UI uses slate `#0F172A` / `#1E293B` foundations, amber `#F59E0B` / `#D97706` primary actions, pale `#F8FAFC` / `#E2E8F0` text and card surfaces, and red `#EF4444` for status/focus alerts.
