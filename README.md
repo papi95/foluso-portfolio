@@ -31,10 +31,14 @@ Visit <http://localhost:8000>.
 ├── styles.css             # Responsive visual system and CSS artwork
 ├── script.js              # Local sample data, filters, search, and invite prototype
 ├── rust-core/             # Dependency-free Rust media-network domain model
-├── docs/                  # Product and technical notes
+├── docs/                  # Product, technical, and launch messaging docs
 ├── CONTRIBUTING.md
 └── LICENSE
 ```
+
+## Launch copy
+
+A ready-to-edit launch email and social announcement draft is in [docs/LAUNCH-ANNOUNCEMENT.md](docs/LAUNCH-ANNOUNCEMENT.md). It includes a reminder to verify feature availability before sending.
 
 ## Rust domain core
 
