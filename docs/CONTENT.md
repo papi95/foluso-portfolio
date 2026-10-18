@@ -1,7 +1,9 @@
 # Product and demo content notes
 
-All names, profiles, listings, prices, locations, gigs, and community activity currently shown in `script.js` are illustrative sample data. They are not verified members or active offers. Keep this clear in any public preview and replace demo content only with consented, accurate listings.
+The marketing page's profile cards, gig preview rows, gear examples, member names, and community tip are illustrative. They are not verified members or live listings. The live opportunity board is at `/app` and shows only gigs posted through the pilot API. Keep this distinction clear in every public preview.
 
-Each sample listing has a `type` (`people`, `gigs`, `gear`, `help`) for category filtering, a `searchable` text field used by local keyword search, a location, tags, and CSS artwork class. Update all those values together when adding or changing a sample listing. Never use unsanitized user-submitted data in `innerHTML` in a production application; render user content with safe DOM APIs or a framework's escaping and validate on the server.
+`script.js` contains static marketing examples for discovery filters. `pilot.js` receives real gig/profile metadata from `server.py` and builds UI using safe DOM APIs and `textContent`. Never interpolate user-provided content into HTML strings. Validate all incoming content server-side even when the browser also validates it.
 
-The signup dialog is a front-end demonstration only. It neither stores nor transmits data. Do not collect actual member information until the backend, security, privacy policy, retention rules, and consent flows are ready. The login screen is also a placeholder.
+The account form on `/app` creates a real pilot account in SQLite. Passwords are not stored in plaintext, but email verification, recovery, export, and deletion are not implemented. Do not collect real members broadly until those controls and the privacy notice are ready. The registration gate can be configured with `PILOT_INVITE_CODE`; moderators are configured with `MODERATOR_EMAILS`.
+
+The gear and community sections describe later product phases. Do not change their “coming next” labels or claim functionality until those features are built, tested, moderated, and available to members.

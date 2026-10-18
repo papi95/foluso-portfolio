@@ -1,62 +1,72 @@
-# Crews & Gigs — Media Community Prototype
+# Crews & Gigs — media-production pilot
 
-A fast, responsive front-end prototype for a global media community: musicians, live and AV crews, photographers, videographers, designers, editors, producers, and the people who support them. The concept brings collaborators, paid gigs, equipment sales and rentals, and peer help into one network.
+A lightweight full-stack pilot for media professionals. The initial usable workflow is intentionally focused: create an account, post a gig, find and apply to gigs, review applications, close a post, and report a concerning listing. The landing page still includes illustrative people and gear cards; only gigs created in the pilot API are live records.
 
-The current build is a static prototype with local sample listings. Search, category filtering, responsive navigation, and the invite dialog work in-browser. Accounts, messaging, payments, verified listings, and real submissions require a backend and are not yet connected. The signup modal clearly identifies itself as a prototype and does not send or store the submitted details.
+## Run the pilot locally
 
-## Run locally
-
-No install or build step is required:
+Requires Python 3.11 or newer.
 
 ```sh
-python3 -m http.server 8000
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements-dev.txt
+uvicorn server:app --host 0.0.0.0 --port 8000
 ```
 
-Visit <http://localhost:8000>.
+Open <http://localhost:8000> for the marketing page or <http://localhost:8000/app> for the working gig-board pilot. The SQLite database is created at `instance/crews-gigs.sqlite3`; it is ignored by Git. Set `CREWS_GIGS_DB` to use a different path.
 
-## Prototype features
+Run the API tests:
 
-- Search sample profiles, gigs, equipment, and community discussions by keyword and location
-- Filter by people, gigs, gear, and help
-- Responsive menu and browser-native invite dialog
-- Accessible focus skip link, labels, keyboard-operable controls, and reduced-motion support
-- CSS-generated illustration and listing artwork; no large images, JS frameworks, or font downloads
-- Rust domain model in `rust-core/` as a foundation for a future backend
+```sh
+python -m unittest discover -s tests -v
+```
 
-## Files
+Run the Rust domain-core tests separately with `cd rust-core && cargo test`.
+
+## MVP scope
+
+**Included:** password-hashed member accounts, HttpOnly SameSite session cookies, CSRF checks on state-changing API routes, validated gig posts, location/discipline/keyword filters, applications, poster-only applicant review (applicant email sharing is optional and off by default), closing gigs, and reports.
+
+**Not included:** email verification/recovery, identity or credential verification, messaging/chat, gear transactions, payments/escrow, ratings, or automated moderation. The MVP does not claim that talent is verified or that a gig booking/payment is guaranteed. The signup should remain an invite-only/controlled pilot until a monitored safety contact, backups, privacy review, and production hosting are ready.
+
+## Pilot and launch preparation
+
+- Proposed first market, not yet confirmed: Lagos, with remote gigs allowed. See [pilot product plan](docs/PRODUCT-PLAN.md).
+- Use the interview questions and usability tasks in [pilot research](docs/PILOT-RESEARCH.md); recruit and interview real professionals before expanding.
+- Complete the name/domain/social-handle and trademark checks in the plan with the founder and a qualified professional. This project does not establish legal clearance or availability.
+- Review [community guidelines](docs/COMMUNITY-GUIDELINES.md), [privacy draft](docs/PRIVACY.md), and [terms draft](docs/TERMS.md) with qualified local counsel. They are planning drafts, not publication-ready legal notices.
+- The [launch announcement](docs/LAUNCH-ANNOUNCEMENT.md) is a template; only claim functionality that is live.
+
+## Production deployment requirements
+
+GitHub Pages can host only the static marketing page; it cannot run the API. Deploy this FastAPI application on an HTTPS-capable app host with a persistent volume for SQLite (or move to managed PostgreSQL), set `CREWS_GIGS_DB` to that volume, and set `COOKIE_SECURE=1`. Use a trusted reverse proxy, external/persistent rate limiting, monitored backups and restore tests, a support inbox, and dependency updates. Do not expose the repository or database through static file serving. Do not use the local SQLite configuration as a multi-instance production database.
+
+The server deliberately serves only allow-listed static files and public policy/plan documents. It returns security headers, stores only a PBKDF2 password hash, stores hashed session tokens, and never returns member email addresses in public gig responses. Configure `PILOT_INVITE_CODE` to gate registration and `MODERATOR_EMAILS` to grant the report-review tab to already-registered moderator accounts. See `.env.example`; set these values in the host's environment/secret manager, not in Git.
+
+The in-memory login limiter is a basic single-process pilot safeguard, not a substitute for a persistent edge rate limiter in production. Email verification/password recovery and automated email alerts are not built; use a tightly controlled invite pilot until those are added. Reports are stored in the database but are not automatically emailed to moderators. Configure an actual moderator account and support channel and check the review queue routinely.
+
+### Container quick start
+
+```sh
+docker build -t crews-gigs .
+docker run --rm -p 8000:8000 \\
+  -v crews-gigs-data:/data \\
+  -e PILOT_INVITE_CODE='replace-with-a-long-random-code' \\
+  -e MODERATOR_EMAILS='moderator@example.com' \\
+  crews-gigs
+```
+
+The container sets `COOKIE_SECURE=1`, so run it behind HTTPS. Register the moderator account using the invite code, then sign in to review reports. For a short local HTTP-only check, run Uvicorn directly (the default cookie setting is non-Secure for localhost only).
+
+## Repository map
 
 ```text
 .
-├── index.html             # Product landing/discovery experience
-├── styles.css             # Responsive visual system and CSS artwork
-├── script.js              # Local sample data, filters, search, and invite prototype
-├── rust-core/             # Dependency-free Rust media-network domain model
-├── docs/                  # Product, technical, and launch messaging docs
-├── CONTRIBUTING.md
-└── LICENSE
+├── index.html / styles.css / script.js  # Marketing landing page and demo discovery
+├── pilot.html / pilot.css / pilot.js    # Working pilot interface
+├── server.py                            # FastAPI + SQLite API and allow-listed assets
+├── requirements.txt                     # Runtime dependencies
+├── tests/test_api.py                    # Auth, posting, application, permission, and safety tests
+├── rust-core/                           # Rust media-listing domain types
+└── docs/                                 # Pilot plan, research kit, policies, launch copy
 ```
-
-## Launch copy
-
-A ready-to-edit launch email and social announcement draft is in [docs/LAUNCH-ANNOUNCEMENT.md](docs/LAUNCH-ANNOUNCEMENT.md). It includes a reminder to verify feature availability before sending.
-
-## Rust domain core
-
-The small, dependency-free Rust crate models media listings and listing categories. It is not currently compiled to WebAssembly or connected to the static page. Run its unit tests with:
-
-```sh
-cd rust-core
-cargo test
-```
-
-## Production roadmap
-
-Before launching a real network, add a secure API and persistent database; member accounts and profiles; direct messaging; gig applications; moderation and report flows; verified equipment condition/availability; safe payments or escrow; privacy and terms documentation; and operational support. Validate identity, payment, and listing data server-side. Clearly define location privacy, dispute handling, prohibited listings, and platform fees.
-
-## Deployment
-
-Deploy the repository root to any static host. No build command is needed for the prototype. A static host will only publish the demo; it cannot provide the marketplace, accounts, or messaging backend described in the roadmap.
-
-## License
-
-MIT — see [LICENSE](LICENSE).

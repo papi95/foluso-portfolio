@@ -113,6 +113,7 @@ if (searchForm) searchForm.addEventListener('submit', (event) => {
   });
 });
 document.querySelectorAll('.search-shortcuts button').forEach((button) => button.addEventListener('click', () => {
+  if (button.dataset.setFilter === 'gigs') { window.location.assign('/app'); return; }
   byId('search').value = '';
   byId('location').value = '';
   query = '';
@@ -130,57 +131,11 @@ byId('reset-search')?.addEventListener('click', () => {
   selectCategory('all');
 });
 
-const dialog = byId('signup-modal');
-const signupForm = byId('signup-form');
 function openModal(mode) {
-  if (!dialog || !signupForm || dialog.open) return;
-  const isSignIn = mode === 'signin';
-  const title = byId('modal-title');
-  title.replaceChildren(document.createTextNode(isSignIn ? 'Good to' : 'Find your'), document.createElement('br'));
-  const emphasis = make('em', '', isSignIn ? 'see you.' : 'people.');
-  title.append(emphasis);
-  document.querySelector('.modal-description').textContent = isSignIn
-    ? 'Member sign-in will be available when the network launches.'
-    : 'One network for creators, crew, and everyone behind the scenes.';
-  const roleField = signupForm.querySelector('[name="role"]');
-  const nameField = signupForm.querySelector('[name="name"]');
-  roleField.closest('label').hidden = isSignIn;
-  roleField.required = !isSignIn;
-  nameField.closest('label').hidden = isSignIn;
-  nameField.required = !isSignIn;
-  const submit = signupForm.querySelector('button[type="submit"]');
-  submit.replaceChildren(document.createTextNode(isSignIn ? 'Continue with email ' : 'Request an invite '), make('span', '', '↗'));
-  signupForm.dataset.mode = isSignIn ? 'signin' : 'join';
-  signupForm.hidden = false;
-  byId('success-message').hidden = true;
-  dialog.showModal();
+  const target = mode === 'signin' ? '/app?signin=1' : mode === 'post' ? '/app?post=1' : '/app';
+  window.location.assign(target);
 }
 document.querySelectorAll('[data-open]').forEach((button) => button.addEventListener('click', () => openModal(button.dataset.open)));
-if (signupForm) signupForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  if (!signupForm.reportValidity()) return;
-  const success = byId('success-message');
-  if (signupForm.dataset.mode === 'signin') {
-    success.querySelector('h3').textContent = 'Sign-in is coming soon.';
-    success.querySelector('p').textContent = 'Member accounts are not connected in this prototype yet.';
-  } else {
-    success.querySelector('h3').textContent = 'Thanks for trying the demo.';
-    success.querySelector('p').textContent = 'This prototype does not save or send your details. Real invitations will be available when the platform backend is ready.';
-  }
-  success.hidden = false;
-  signupForm.hidden = true;
-});
-byId('done-button')?.addEventListener('click', () => dialog?.close());
-if (dialog && signupForm) dialog.addEventListener('close', () => {
-  signupForm.reset();
-  signupForm.hidden = false;
-  signupForm.dataset.mode = 'join';
-  signupForm.querySelector('[name="name"]').closest('label').hidden = false;
-  signupForm.querySelector('[name="name"]').required = true;
-  signupForm.querySelector('[name="role"]').closest('label').hidden = false;
-  signupForm.querySelector('[name="role"]').required = true;
-  byId('success-message').hidden = true;
-});
 
 const menuButton = document.querySelector('.mobile-menu');
 const nav = document.querySelector('.main-nav');
