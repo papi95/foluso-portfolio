@@ -54,13 +54,26 @@ pub fn listings_of_kind(kind: ListingKind) -> Vec<MediaListing> {
 pub fn is_valid_email(email: &str) -> bool {
     let email = email.trim();
     if email.len() > 254 || email.chars().any(char::is_whitespace) { return false; }
+    if email.matches('@').count() != 1 { return false; }
     let Some((local, domain)) = email.split_once('@') else { return false; };
+    let allowed_local = |ch: char| ch.is_ascii_alphanumeric() || ".!#$%&'*+-/=?^_`{|}~".contains(ch);
+    let labels: Vec<&str> = domain.split('.').collect();
     !local.is_empty()
         && local.len() <= 64
-        && domain.contains('.')
-        && !domain.starts_with('.')
-        && !domain.ends_with('.')
-        && !domain.contains("..")
+        && !local.starts_with('.')
+        && !local.ends_with('.')
+        && !local.contains("..")
+        && local.chars().all(allowed_local)
+        && domain.len() <= 253
+        && labels.len() >= 2
+        && labels.iter().all(|label| {
+            !label.is_empty()
+                && label.len() <= 63
+                && !label.starts_with('-')
+                && !label.ends_with('-')
+                && label.chars().all(|ch| ch.is_ascii_alphanumeric() || ch == '-')
+        })
+        && labels.last().map_or(false, |label| label.len() >= 2)
 }
 
 #[cfg(test)]
@@ -82,7 +95,7 @@ mod tests {
 
     #[test]
     fn email_check_rejects_malformed_addresses() {
-        for email in ["", "hello", "@example.com", "hello@localhost", "a b@example.com", "a..b@example.com"] {
+        for email in ["", "hello", "@example.com", "hello@localhost", "a b@example.com", "a..b@example.com", "a@b@c.com", ".a@example.com", "a@-example.com", "a@example-.com", "a@x.y"] {
             assert!(!is_valid_email(email), "should reject {email}");
         }
     }
