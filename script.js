@@ -22,6 +22,7 @@ const listings = [
 ];
 const artLabels = { people:'CREATIVE PROFILE', gigs:'OPEN OPPORTUNITY', gear:'GEAR MARKET', help:'COMMUNITY THREAD' };
 const artIcons = { people:'↗', gigs:'✳', gear:'▧', help:'?' };
+const urgentAvailability = /^(NEW|JUST LISTED|ACTIVE TODAY)/;
 const grid = byId('listing-grid');
 const empty = byId('no-results');
 let activeCategory = 'all';
@@ -30,10 +31,11 @@ let place = '';
 let hasInteractedWithListings = false;
 
 function createListing(item) {
-  const card = make('article', 'listing-card');
+  const card = make('article', `listing-card listing-card--${item.type}`);
   const art = make('div', `listing-art ${item.art}`);
   art.append(make('span', 'art-symbol', artIcons[item.type] || '✳'));
   const status = make('span', 'listing-status');
+  if (urgentAvailability.test(item.availability)) status.classList.add('listing-status--urgent');
   const statusDot = make('i');
   status.append(statusDot, document.createTextNode(item.availability));
   art.append(status, make('span', 'listing-art-label', artLabels[item.type] || 'COMMUNITY'), make('span', 'listing-monogram', item.initials));

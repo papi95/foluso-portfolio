@@ -26,4 +26,4 @@ The static prototype has no build step, external font requests, or large image a
 
 ## Visual palette
 
-The UI uses slate `#0F172A` / `#1E293B` foundations, amber `#F59E0B` / `#D97706` primary actions, pale `#F8FAFC` / `#E2E8F0` text and card surfaces, and red `#EF4444` for status/focus alerts.
+The UI uses slate `#0F172A` / `#1E293B` foundations, amber `#F59E0B` / `#D97706` primary actions, pale `#F8FAFC` / `#E2E8F0` text and card surfaces, and red `#EF4444` for status/focus alerts. Gigs use amber, equipment listings use signal cyan, community threads use muted slate, and new/urgent availability uses crimson so each marketplace area is easy to scan.

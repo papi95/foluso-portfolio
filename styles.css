@@ -87,3 +87,23 @@ body{background:var(--bg);color:var(--ink)}
 .brand-symbol{color:#0F172A}
 .no-results>span{color:var(--accent)}
 .modal-content>.section-index{color:#475569}
+
+/* Type-coded accents for opportunity, equipment, community, and urgent/live content. */
+:root{--gig-accent:#F59E0B;--gear-accent:#38BDF8;--community-accent:#94A3B8}
+.category[data-category="gigs"].active:after{background:var(--gig-accent)}
+.category[data-category="gigs"] span{color:var(--gig-accent)}
+.category[data-category="gear"].active:after{background:var(--gear-accent)}
+.category[data-category="gear"] span{color:var(--gear-accent)}
+.category[data-category="help"].active:after{background:var(--community-accent)}
+.category[data-category="help"] span{color:var(--community-accent)}
+.listing-card--gigs .listing-status i{background:var(--gig-accent)}
+.listing-card--gigs .listing-action span{color:#B45309}
+.listing-card--gear .listing-status i{background:var(--gear-accent)}
+.listing-card--gear .listing-action span{color:#0369A1}
+.listing-card--help .listing-status i{background:var(--community-accent)}
+.listing-card--help .listing-action span{color:#475569}
+.listing-card--gigs .listing-action span,.listing-card--gear .listing-action span,.listing-card--help .listing-action span{background:transparent}
+.listing-card .listing-status--urgent{background:#FEE2E2;color:#7F1D1D}
+.listing-card .listing-status--urgent i{background:var(--alert);color:var(--alert)}
+.community .quote-mark,.community-perks span{color:var(--community-accent)}
+.community .pro-badge{background:#CBD5E1;color:#0F172A}
