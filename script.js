@@ -1,4 +1,4 @@
-// CREWBAY's interactive demo. Listings are local examples; no personal data is sent or persisted.
+// Crews & Gigs interactive demo. Listings are local examples; no personal data is sent or persisted.
 const byId = (id) => document.getElementById(id);
 const make = (tag, className, text) => {
   const node = document.createElement(tag);

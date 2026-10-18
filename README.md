@@ -1,4 +1,4 @@
-# CREWBAY — Media Community Prototype
+# Crews & Gigs — Media Community Prototype
 
 A fast, responsive front-end prototype for a global media community: musicians, live and AV crews, photographers, videographers, designers, editors, producers, and the people who support them. The concept brings collaborators, paid gigs, equipment sales and rentals, and peer help into one network.
 

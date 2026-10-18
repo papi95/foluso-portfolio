@@ -1,12 +1,12 @@
 [package]
-name = "foluso-portfolio-core"
+name = "crews-gigs-core"
 version = "0.1.0"
 edition = "2021"
-description = "Dependency-free Rust domain types for the Crewbay media community"
+description = "Dependency-free Rust domain types for the Crews & Gigs media community"
 license = "MIT"
 
 [lib]
-name = "portfolio_core"
+name = "crews_gigs_core"
 path = "src/lib.rs"
 
 [dependencies]

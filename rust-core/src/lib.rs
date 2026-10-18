@@ -1,4 +1,4 @@
-//! Dependency-free domain types for the Crewbay media-community prototype.
+//! Dependency-free domain types for the Crews & Gigs media-community prototype.
 //! These types are a starting point for a future API; the current static site
 //! does not persist records or run this crate in the browser.
 
